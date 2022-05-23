@@ -97,21 +97,24 @@ public class Main {
 				String[] cmd = command.split(" ");
 				int num = Integer.parseInt(cmd[2]);
 				Article foundarticle = null;
-				
+				int index = -1;
 				//입력된 번호를 가지고 있는 게시글 for문으로 비교탐색
 				for(int i=0;i<article.size();i++) {
 					if(num == article.get(i).id) { // 해당 번호의 게시글 객체가 있다면 저장
-						foundarticle = article.get(i);
+						//foundarticle = article.get(i);
+						index = i;
 						break;
 					}
 				}
 				
-				if (foundarticle==null) {
+				if (index<0) {
 					System.out.printf("%d번 게시글은 존재하지 않습니다.\n",num);
 					continue;
 				}
 				//저장된 객체의 인덱스 번호를 이용하여 array list에서 삭제
-				article.remove(article.indexOf(foundarticle));
+				//article.remove(article.indexOf(foundarticle));
+				//article.remove(foundarticle);
+				article.remove(index);
 				System.out.printf("%d번 게시글이 삭제되었습니다.\n",num);
 			}
 			//해당 게시글 수정 - update
@@ -133,14 +136,14 @@ public class Main {
 					System.out.printf("%d번 게시글은 존재하지 않습니다.\n",num);
 					continue;
 				}
-//				System.out.printf("수정 전 %d %s %s %s\n",foundarticle.id,foundarticle.datetime, foundarticle.title, foundarticle.content);
+
 				//제목 다시 입력 받기
 				System.out.printf("제목 : ");
 				foundarticle.title = sc.nextLine();
 				//내용 다시 입력 받기
 				System.out.printf("내용 : ");
 				foundarticle.content = sc.nextLine();
-//				System.out.printf("수정 후 %d %s %s %s\n",foundarticle.id,foundarticle.datetime, foundarticle.title, foundarticle.content);
+				
 				System.out.printf("%d번 게시글이 수정되었습니다.\n",num);
 			}
 			else System.out.println("존재하지 않는 명령어입니다.");
