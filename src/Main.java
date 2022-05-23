@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class Main {
 	public static void main(String[] args) {
-		int idx = 0;
+		int lastArticleid = 0;
 		List<Article> article = new ArrayList<>();
 		
 		System.out.println("==프로그램 시작==");
@@ -19,7 +19,7 @@ public class Main {
 			if(command.equals("system exit")) break; //system exit 입력된 경우 종료
 			
 			if(command.equals("article write")) {
-				int id = idx + 1;
+				int id = lastArticleid + 1;
 				//제목 입력 받기
 				System.out.printf("제목 : ");
 				String title = sc.nextLine();
@@ -31,16 +31,18 @@ public class Main {
 				article.add(articlec);
 				
 				System.out.println(id+"번글이 생성되었습니다");
-				idx = id;
+				lastArticleid = id;
 			}
 			else if(command.equals("article list")) {
 
-				if(article.size() == 0) System.out.println("게시글이 없습니다"); //article 객체 리스트의 크기가 0
-				else {
-					System.out.printf("게시글이 %d개 존재합니다\n",idx);
-					for(int i=0;i<article.size();i++) {
-						System.out.printf("%d 제목:%s 내용:%s\n", article.get(i).id,article.get(i).title,article.get(i).content);
-					}
+				if(article.size() == 0) {
+					System.out.println("게시글이 없습니다"); //article 객체 리스트의 크기가 0
+					continue;
+				}
+				System.out.printf(" 번호 |  제목\n",article.size());
+				for(int i=article.size();i>0;i--) {
+					Article articlec = article.get(i-1);
+					System.out.printf("  %d  |  제목:%s\n", articlec.id,articlec.title);
 				}
 			}
 			else System.out.println("존재하지 않는 명령어입니다");
