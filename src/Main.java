@@ -46,10 +46,10 @@ public class Main {
 				}
 				
 				System.out.println("=========================");
-				System.out.printf(" 번호 |  제목\n",article.size());
+				System.out.printf(" 번호 |  제목  |  조회\n",article.size());
 				for(int i=article.size();i>0;i--) {
 					Article articlec = article.get(i-1);
-					System.out.printf("  %d  |  제목:%s\n", articlec.id,articlec.title);
+					System.out.printf(" %2d  | %5s | %2d\n", articlec.id,articlec.title,articlec.hit);
 				}
 				System.out.println("=========================");
 			}
@@ -73,12 +73,15 @@ public class Main {
 					continue;
 				}
 				
+				foundarticle.increaseHit(); //조회수
+				
 				//저장된 객체의 정보 출력
 				System.out.println("=========================");
 				System.out.printf("번호 : %d\n",foundarticle.id);
 				System.out.printf("날짜 : %s\n",foundarticle.datetime);
 				System.out.printf("제목 : %s\n",foundarticle.title);
 				System.out.printf("내용 : %s\n",foundarticle.content);
+				System.out.printf("조회 : %s\n",foundarticle.hit);
 				System.out.println("=========================");
 			}
 			//해당 게시글 삭제 - delete
@@ -106,7 +109,7 @@ public class Main {
 				System.out.printf("%d번 게시글이 삭제되었습니다.\n",id);
 			}
 			//해당 게시글 수정 - update
-			/*else if(command.startsWith("article update ")) { //contains
+			else if(command.startsWith("article modify ")) { //contains
 
 				String[] cmd = command.split(" ");
 				int num = Integer.parseInt(cmd[2]);
@@ -133,7 +136,7 @@ public class Main {
 				foundarticle.content = sc.nextLine();
 				
 				System.out.printf("%d번 게시글이 수정되었습니다.\n",num);
-			}*/
+			}
 			else System.out.println("존재하지 않는 명령어입니다.");
 		}
 		sc.close();
@@ -147,11 +150,17 @@ class Article{
 	String title;
 	String content;
 	String datetime;
+	int hit;
 	
 	public Article(int id, String title, String body, String datetime){
 		this.id = id;
 		this.title = title;
 		this.content = body;
 		this.datetime = datetime;
+		this.hit = 0;
+	}
+	
+	public void increaseHit() {
+		hit++;
 	}
 }
