@@ -70,15 +70,7 @@ public class App {
 
 					String[] cmd = command.split(" ");
 					int id = Integer.parseInt(cmd[2]);
-					Article foundarticle = null;
-					
-					//입력된 번호를 가지고 있는 게시글 for문으로 비교탐색
-					for(int i=0;i<article.size();i++) {
-						if(id == article.get(i).id) { // 해당 번호의 게시글 객체가 있다면 저장
-							foundarticle = article.get(i);
-							break;
-						}
-					}
+					Article foundarticle = findarticle(id);
 					
 					if (foundarticle==null) {
 						System.out.printf("%d번 게시글은 존재하지 않습니다.\n",id);
@@ -96,47 +88,15 @@ public class App {
 					System.out.printf("조회 : %s\n",foundarticle.hit);
 					System.out.println("=========================");
 				}
-				//해당 게시글 삭제 - delete
-				else if(command.startsWith("article delete ")) { //contains
-
-					String[] cmd = command.split(" ");
-					int id = Integer.parseInt(cmd[2]);
-					int foundindex = -1;
-					
-					//입력된 번호를 가지고 있는 게시글 for문으로 비교탐색
-					for(int i=0;i<article.size();i++) {
-						if(id == article.get(i).id) { // 해당 번호의 게시글의 id가 있다면 저장
-							foundindex = i;
-							break;
-						}
-					}
-					
-					if (foundindex == -1) {
-						System.out.printf("%d번 게시글은 존재하지 않습니다.\n",id);
-						continue;
-					}
-					
-					//저장된 객체의 인덱스 번호를 이용하여 array list에서 삭제
-					article.remove(foundindex);
-					System.out.printf("%d번 게시글이 삭제되었습니다.\n",id);
-				}
 				//해당 게시글 수정 - update
 				else if(command.startsWith("article modify ")) { //contains
 
 					String[] cmd = command.split(" ");
-					int num = Integer.parseInt(cmd[2]);
-					Article foundarticle = null;
-					
-					//입력된 번호를 가지고 있는 게시글 for문으로 비교탐색
-					for(int i=0;i<article.size();i++) {
-						if(num == article.get(i).id) { // 해당 번호의 게시글 객체가 있다면 저장
-							foundarticle = article.get(i);
-							break;
-						}
-					}
+					int id = Integer.parseInt(cmd[2]);
+					Article foundarticle = findarticle(id);
 					
 					if (foundarticle==null) {
-						System.out.printf("%d번 게시글은 존재하지 않습니다.\n",num);
+						System.out.printf("%d번 게시글은 존재하지 않습니다.\n",id);
 						continue;
 					}
 
@@ -147,7 +107,23 @@ public class App {
 					System.out.printf("내용 : ");
 					foundarticle.content = sc.nextLine();
 					
-					System.out.printf("%d번 게시글이 수정되었습니다.\n",num);
+					System.out.printf("%d번 게시글이 수정되었습니다.\n",id);
+				}
+				//해당 게시글 삭제 - delete
+				else if(command.startsWith("article delete ")) { //contains
+
+					String[] cmd = command.split(" ");
+					int id = Integer.parseInt(cmd[2]);
+					int foundindex = findarticleindex(id);
+					
+					if (foundindex == -1) {
+						System.out.printf("%d번 게시글은 존재하지 않습니다.\n",id);
+						continue;
+					}
+					
+					//저장된 객체의 인덱스 번호를 이용하여 array list에서 삭제
+					article.remove(foundindex);
+					System.out.printf("%d번 게시글이 삭제되었습니다.\n",id);
 				}
 				else System.out.println("존재하지 않는 명령어입니다.");
 			}
@@ -164,6 +140,29 @@ public class App {
 			article.add(new Article(2, "222", "222", Util.getNowDateTimeStr(),2));
 			article.add(new Article(3, "333", "333", Util.getNowDateTimeStr(),3));
 			lastid = article.size();
+		}
+		
+		//중복 기능 제거 -> 메서드 생성
+		Article findarticle(int id) {
+			
+			//입력된 번호를 가지고 있는 게시글 for문으로 비교탐색
+			for(int i=0;i<article.size();i++) {
+				if(id == article.get(i).id) { // 해당 번호의 게시글 객체가 있다면 저장
+					return article.get(i);
+				}
+			}
+			return null;
+		}
+		
+		int findarticleindex(int id) {
+			
+			//입력된 번호를 가지고 있는 게시글 for문으로 비교탐색
+			for(int i=0;i<article.size();i++) {
+				if(id == article.get(i).id) { // 해당 번호의 게시글의 id가 있다면 저장
+					return i;
+				}
+			}
+			return -1;
 		}
 
 }
