@@ -147,16 +147,16 @@ public class App {
 
 	// 중복 기능 제거 -> 메서드 생성
 	Article findarticle(int id) {
-
-		// 입력된 번호를 가지고 있는 게시글 foreach문으로 비교탐색
-		for (Article article : article) {
-			if (id == article.id) return article;
+		//for 탐색 중복 제거
+		int index = findarticleindex(id);
+		
+		if (index != -1) {
+			return article.get(index);
 		}
 		return null;
 	}
 
 	int findarticleindex(int id) {
-
 		// 입력된 번호를 가지고 있는 게시글 foreach문으로 비교탐색
 		int i=0;
 		for (Article article : article) {
