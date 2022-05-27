@@ -51,19 +51,37 @@ public class App {
 
 				System.out.println(id + "번글이 생성되었습니다.");
 			}
-			// 게시글 목록 보여주기
-			else if (command.equals("article list")) {
+			// 게시글 목록 보여주기 - 검색 기능 추가
+			else if (command.startsWith("article list")) {
 
 				if (article.size() == 0) {
 					System.out.println("게시글이 존재하지 않습니다."); // article 객체 리스트의 크기가 0
 					continue;
 				}
+				
+				List<Article> forPrintArticles = article; // list 변수 만들어서 article리스트 복사
 
+				String searchkeyword = command.substring("article list".length()).trim();
+				
+				if(searchkeyword.length() > 0) { //키워드가 있는 경우
+					forPrintArticles = new ArrayList<>(); //새로운 리스트 생성
+					for(Article articlec : article) {
+						if(articlec.title.contains(searchkeyword)) { //키워드가 제목에 포함되면
+							forPrintArticles.add(articlec); //해당 데이터 추가
+						}
+					}					
+					if (forPrintArticles.size() == 0) {
+						System.out.printf("%s와 일치하는 검색결과가 없습니다.\n",searchkeyword);
+						continue;
+					}
+				}
+				//키워드가 존재하는 경우 새로운 리스트 생성하여 리스트 출력
+				//키워드가 존재하지 않는 경우 복사된 article 리스트 출력
 				System.out.println("=========================");
 				System.out.printf(" 번호 |  제목  |  조회\n", article.size());
-
-				for (int i = article.size(); i > 0; i--) {
-					Article articlec = article.get(i - 1);
+				
+				for (int i = forPrintArticles.size(); i > 0; i--) {
+					Article articlec = forPrintArticles.get(i - 1);
 					System.out.printf(" %2d  | %5s | %2d\n", articlec.id, articlec.title, articlec.hit);
 				}
 				System.out.println("=========================");
@@ -127,8 +145,8 @@ public class App {
 				// 저장된 객체의 인덱스 번호를 이용하여 array list에서 삭제
 				article.remove(foundindex);
 				System.out.printf("%d번 게시글이 삭제되었습니다.\n", id);
-			} else
-				System.out.println("존재하지 않는 명령어입니다.");
+			}
+			else System.out.println("존재하지 않는 명령어입니다.");
 		}
 		sc.close();
 
