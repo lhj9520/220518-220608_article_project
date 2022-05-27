@@ -6,18 +6,28 @@ import java.util.Scanner;
 
 import com.KoreaIT.java.AM.Util.Util;
 import com.KoreaIT.java.AM.dto.Article;
+import com.KoreaIT.java.AM.dto.Member;
 
 public class App {
 	private List<Article> article;
+	private List<Member> member;
 	static int lastid = 0;
 
 	App() {
 		article = new ArrayList<>();
+		member = new ArrayList<>();
 	}
 
 	public void start() {
 
 		System.out.println("========프로그램 시작========");
+		System.out.println("member join 회원가입");
+		System.out.println("article write 게시글 작성");
+		System.out.println("article list <id> 게시글 목록 조회");
+		System.out.println("article detail <id> 게시글 상세 보기");
+		System.out.println("article modify <id> 게시글 수정");
+		System.out.println("article delete <id> 게시글 삭제");
+		System.out.println("=========================");
 
 		makeTestData();
 
@@ -32,8 +42,46 @@ public class App {
 			if (command.equals("system exit"))
 				break; // system exit 입력된 경우 종료
 
+			// 회원가입
+			if (command.equals("member join")) {
+				int idx = member.size() + 1;
+				
+				System.out.printf("아이디를 입력하세요 : ");
+				String id = sc.nextLine();
+				
+				String pwd = null;
+				String pwdconfirm = null;
+				
+				while(true) {
+					// PWD 입력 받기
+					System.out.printf("비밀번호를 입력하세요 : ");
+					pwd = sc.nextLine();
+					System.out.printf("비밀번호 확인: ");
+					pwdconfirm = sc.nextLine();
+					
+					if(!pwd.equals(pwdconfirm)) {
+						System.out.println("비밀번호를 다시 입력하세요");
+						continue;
+					}
+					break;
+				}
+
+				// 이름 입력 받기
+				System.out.printf("이름을 입력하세요 : ");
+				String name = sc.nextLine();
+
+				Member members = new Member(idx, Util.getNowDateTimeStr(), id, pwd, name);
+				member.add(members);
+
+				System.out.println(idx+"번 회원가입이 완료되었습니다.");
+
+				for (Member m : member) {
+					System.out.printf("%s %s %s\n", m.mid, m.mpwd, m.mname);
+				}
+
+			}
 			// 게시글 작성 - create
-			if (command.equals("article write")) {
+			else if (command.equals("article write")) {
 				// int id = article.size() + 1; //리스트 객체의 크기를 가져오면 됨 근데 이렇게 하면 delete -> write 시
 				// 게시글 index 꼬임 다시 lastid 변수 추가함
 				int id = lastid + 1;
@@ -58,28 +106,28 @@ public class App {
 					System.out.println("게시글이 존재하지 않습니다."); // article 객체 리스트의 크기가 0
 					continue;
 				}
-				
+
 				List<Article> forPrintArticles = article; // list 변수 만들어서 article리스트 복사
 
 				String searchkeyword = command.substring("article list".length()).trim();
-				
-				if(searchkeyword.length() > 0) { //키워드가 있는 경우
-					forPrintArticles = new ArrayList<>(); //새로운 리스트 생성
-					for(Article articlec : article) {
-						if(articlec.title.contains(searchkeyword)) { //키워드가 제목에 포함되면
-							forPrintArticles.add(articlec); //해당 데이터 추가
+
+				if (searchkeyword.length() > 0) { // 키워드가 있는 경우
+					forPrintArticles = new ArrayList<>(); // 새로운 리스트 생성
+					for (Article articlec : article) {
+						if (articlec.title.contains(searchkeyword)) { // 키워드가 제목에 포함되면
+							forPrintArticles.add(articlec); // 해당 데이터 추가
 						}
-					}					
+					}
 					if (forPrintArticles.size() == 0) {
-						System.out.printf("%s와 일치하는 검색결과가 없습니다.\n",searchkeyword);
+						System.out.printf("%s와 일치하는 검색결과가 없습니다.\n", searchkeyword);
 						continue;
 					}
 				}
-				//키워드가 존재하는 경우 새로운 리스트 생성하여 리스트 출력
-				//키워드가 존재하지 않는 경우 복사된 article 리스트 출력
+				// 키워드가 존재하는 경우 새로운 리스트 생성하여 리스트 출력
+				// 키워드가 존재하지 않는 경우 복사된 article 리스트 출력
 				System.out.println("=========================");
 				System.out.printf(" 번호 |  제목  |  조회\n", article.size());
-				
+
 				for (int i = forPrintArticles.size(); i > 0; i--) {
 					Article articlec = forPrintArticles.get(i - 1);
 					System.out.printf(" %2d  | %5s | %2d\n", articlec.id, articlec.title, articlec.hit);
@@ -145,8 +193,9 @@ public class App {
 				// 저장된 객체의 인덱스 번호를 이용하여 array list에서 삭제
 				article.remove(foundindex);
 				System.out.printf("%d번 게시글이 삭제되었습니다.\n", id);
+			} else {
+				System.out.println("존재하지 않는 명령어입니다.");
 			}
-			else System.out.println("존재하지 않는 명령어입니다.");
 		}
 		sc.close();
 
@@ -165,9 +214,9 @@ public class App {
 
 	// 중복 기능 제거 -> 메서드 생성
 	Article findarticle(int id) {
-		//for 탐색 중복 제거
+		// for 탐색 중복 제거
 		int index = findarticleindex(id);
-		
+
 		if (index != -1) {
 			return article.get(index);
 		}
@@ -176,7 +225,7 @@ public class App {
 
 	int findarticleindex(int id) {
 		// 입력된 번호를 가지고 있는 게시글 foreach문으로 비교탐색
-		int i=0;
+		int i = 0;
 		for (Article article : article) {
 			if (id == article.id) {
 				return i;

@@ -1,10 +1,8 @@
 package com.KoreaIT.java.AM.dto;
 
-public class Article {
-	public int id;
+public class Article extends Dto{
 	public String title;
 	public String content;
-	public String datetime;
 	public int hit;
 
 	// 메서드 이름은 같고 매개변수의 개수가 다르면 다른 함수로 인식
