@@ -1,6 +1,6 @@
 package com.KoreaIT.java.AM.dto;
 
-public class Article extends Dto{
+public class Article extends Dto {
 	public String title;
 	public String content;
 	public int hit;
