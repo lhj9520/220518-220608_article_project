@@ -45,22 +45,31 @@ public class App {
 			// 회원가입
 			if (command.equals("member join")) {
 				int idx = member.size() + 1;
-				
-				System.out.printf("아이디를 입력하세요 : ");
-				String id = sc.nextLine();
-				
-				String pwd = null;
-				String pwdconfirm = null;
-				
-				while(true) {
+
+				String userid = null;
+
+				while (true) {
+					System.out.printf("아이디를 입력하세요 : ");
+					userid = sc.nextLine();
+					
+					if(id_Duplicatecheck(userid)) { //중복 없음
+						break;
+					}
+					System.out.println("중복된 ID입니다.");
+				}
+
+				String userpwd = null;
+				String userpwdconfirm = null;
+
+				while (true) {
 					// PWD 입력 받기
 					System.out.printf("비밀번호를 입력하세요 : ");
-					pwd = sc.nextLine();
+					userpwd = sc.nextLine();
 					System.out.printf("비밀번호 확인: ");
-					pwdconfirm = sc.nextLine();
-					
-					if(!pwd.equals(pwdconfirm)) {
-						System.out.println("비밀번호를 다시 입력하세요");
+					userpwdconfirm = sc.nextLine();
+
+					if (!userpwd.equals(userpwdconfirm)) {
+						System.out.println("비밀번호를 다시 입력하세요.");
 						continue;
 					}
 					break;
@@ -70,14 +79,14 @@ public class App {
 				System.out.printf("이름을 입력하세요 : ");
 				String name = sc.nextLine();
 
-				Member members = new Member(idx, Util.getNowDateTimeStr(), id, pwd, name);
+				Member members = new Member(idx, Util.getNowDateTimeStr(), userid, userpwd, name);
 				member.add(members);
 
-				System.out.println(idx+"번 회원가입이 완료되었습니다.");
+				System.out.println(idx + "번 회원가입이 완료되었습니다.");
 
-				for (Member m : member) {
-					System.out.printf("%s %s %s\n", m.mid, m.mpwd, m.mname);
-				}
+//				for (Member m : member) {
+//					System.out.printf("%s %s %s\n", m.mid, m.mpwd, m.mname);
+//				}
 
 			}
 			// 게시글 작성 - create
@@ -183,7 +192,7 @@ public class App {
 
 				String[] cmd = command.split(" ");
 				int id = Integer.parseInt(cmd[2]);
-				int foundindex = findarticleindex(id);
+				int foundindex = findArticleIndex(id);
 
 				if (foundindex == -1) {
 					System.out.printf("%d번 게시글은 존재하지 않습니다.\n", id);
@@ -213,9 +222,32 @@ public class App {
 	}
 
 	// 중복 기능 제거 -> 메서드 생성
+	boolean id_Duplicatecheck(String userid) {
+
+		int index = findMemberIndex(userid);
+
+		if (index == -1) { //해당 id 없음
+			return true;
+		}
+		return false;
+	}
+	
+	int findMemberIndex(String userid) {
+		// 입력된 번호를 가지고 있는 회원 foreach문으로 비교탐색
+		int i = 0;
+		for (Member member : member) {
+			if (member.mid.equals(userid)) {
+				return i;
+			}
+			i++;
+		}
+		return -1;
+	}
+	
+	// 중복 기능 제거 -> 메서드 생성
 	Article findarticle(int id) {
 		// for 탐색 중복 제거
-		int index = findarticleindex(id);
+		int index = findArticleIndex(id);
 
 		if (index != -1) {
 			return article.get(index);
@@ -223,7 +255,7 @@ public class App {
 		return null;
 	}
 
-	int findarticleindex(int id) {
+	int findArticleIndex(int id) {
 		// 입력된 번호를 가지고 있는 게시글 foreach문으로 비교탐색
 		int i = 0;
 		for (Article article : article) {
