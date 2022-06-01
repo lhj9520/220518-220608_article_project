@@ -32,12 +32,24 @@ public class ArticleController extends Controller {
 			showDetail();
 			break;
 		case "write":
+			if (!isLogined()) {
+				System.out.println("로그인 상태가 아닙니다.");
+				break;
+			}
 			doWrite();
 			break;
 		case "modify":
+			if (!isLogined()) {
+				System.out.println("로그인 상태가 아닙니다.");
+				break;
+			}
 			doModify();
 			break;
 		case "delete":
+			if (!isLogined()) {
+				System.out.println("로그인 상태가 아닙니다.");
+				break;
+			}
 			doDelete();
 			break;
 		default:
@@ -50,9 +62,9 @@ public class ArticleController extends Controller {
 
 		System.out.println("테스트를 위한 article 데이터를 생성합니다.");
 
-		article.add(new Article(1, "111", "111", Util.getNowDateTimeStr(), 1));
-		article.add(new Article(2, "222", "222", Util.getNowDateTimeStr(), 2));
-		article.add(new Article(3, "333", "333", Util.getNowDateTimeStr(), 3));
+		article.add(new Article(1, 1, "111", "111", Util.getNowDateTimeStr(), 1));
+		article.add(new Article(2, 1, "222", "222", Util.getNowDateTimeStr(), 2));
+		article.add(new Article(3, 1, "333", "333", Util.getNowDateTimeStr(), 3));
 		lastid = article.size();
 	}
 
@@ -68,7 +80,7 @@ public class ArticleController extends Controller {
 		String content = sc.nextLine();
 
 		// 게시판 객체 생성, id,제목,내용,날짜시간 넘겨주기
-		Article articlec = new Article(id, title, content, Util.getNowDateTimeStr());
+		Article articlec = new Article(id, loginedmember.id, title, content, Util.getNowDateTimeStr());
 		article.add(articlec);
 		lastid = id;
 
@@ -100,11 +112,11 @@ public class ArticleController extends Controller {
 		// 키워드가 존재하는 경우 새로운 리스트 생성하여 리스트 출력
 		// 키워드가 존재하지 않는 경우 복사된 article 리스트 출력
 		System.out.println("=========================");
-		System.out.printf(" 번호 |  제목  |  조회\n", article.size());
+		System.out.printf(" 번호 |  제목  |  작성자 |  조회\n", article.size());
 
 		for (int i = forPrintArticles.size(); i > 0; i--) {
 			Article articlec = forPrintArticles.get(i - 1);
-			System.out.printf(" %2d  | %5s | %2d\n", articlec.id, articlec.title, articlec.hit);
+			System.out.printf(" %2d  | %5s | %5d | %2d\n", articlec.id, articlec.title, articlec.memberid, articlec.hit);
 		}
 		System.out.println("=========================");
 	}
@@ -125,6 +137,7 @@ public class ArticleController extends Controller {
 		System.out.println("=========================");
 		System.out.printf("번호 : %d\n", foundarticle.id);
 		System.out.printf("날짜 : %s\n", foundarticle.datetime);
+		System.out.printf("작성자 : %d\n", foundarticle.memberid);
 		System.out.printf("제목 : %s\n", foundarticle.title);
 		System.out.printf("내용 : %s\n", foundarticle.content);
 		System.out.printf("조회 : %s\n", foundarticle.hit);
@@ -138,6 +151,11 @@ public class ArticleController extends Controller {
 
 		if (foundarticle == null) {
 			System.out.printf("%d번 게시글은 존재하지 않습니다.\n", id);
+			return;
+		}
+
+		if (foundarticle.memberid != loginedmember.id) {
+			System.out.println("수정 권한이 없습니다!");
 			return;
 		}
 
@@ -161,12 +179,15 @@ public class ArticleController extends Controller {
 			return;
 		}
 
+		if (article.get(foundindex).memberid != loginedmember.id) {
+			System.out.println("삭제 권한이 없습니다!");
+			return;
+		}
 		// 저장된 객체의 인덱스 번호를 이용하여 array list에서 삭제
 		article.remove(foundindex);
 		System.out.printf("%d번 게시글이 삭제되었습니다.\n", id);
 	}
 
-	// 중복 기능 제거 -> 메서드 생성
 	private Article findarticle(int id) {
 		// for 탐색 중복 제거
 		int index = findArticleIndex(id);

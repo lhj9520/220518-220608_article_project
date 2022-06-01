@@ -12,7 +12,6 @@ public class MemberController extends Controller {
 	private List<Member> member;
 	private String command;
 	private String actionMethodName;
-	private Member loginedmember = null;
 
 	public MemberController(Scanner sc) {
 		member = new ArrayList<>();
@@ -25,15 +24,31 @@ public class MemberController extends Controller {
 
 		switch (actionMethodName) {
 		case "join":
+			if (isLogined()) {
+				System.out.printf("%s님 로그인 상태입니다.\n", loginedmember.mid);
+				break;
+			}
 			doJoin();
 			break;
 		case "login":
+			if (isLogined()) {
+				System.out.printf("%s님 로그인 상태입니다.\n", loginedmember.mid);
+				break;
+			}
 			doLogin();
 			break;
 		case "whoami":
+			if (!isLogined()) {
+				System.out.println("로그인 상태가 아닙니다.");
+				break;
+			}
 			checkWhoami();
 			break;
 		case "logout":
+			if (!isLogined()) {
+				System.out.println("로그인 상태가 아닙니다.");
+				break;
+			}
 			doLogout();
 			break;
 		default:
@@ -55,10 +70,6 @@ public class MemberController extends Controller {
 		int idx = member.size() + 1;
 		String userid = null;
 
-		if (isLogined()) {
-			System.out.printf("%s님 로그인 상태입니다.\n", loginedmember.mid);
-			return;
-		}
 		while (true) {
 			System.out.printf("아이디를 입력하세요 : ");
 			userid = sc.nextLine();
@@ -101,11 +112,6 @@ public class MemberController extends Controller {
 		String inputpw = null;
 		Member membercheck = null;
 
-		if (isLogined()) {
-			System.out.printf("%s님 로그인 상태입니다.\n", loginedmember.mid);
-			return;
-		}
-
 		System.out.printf("아이디를 입력하세요 : ");
 		inputid = sc.nextLine();
 
@@ -129,10 +135,6 @@ public class MemberController extends Controller {
 	}
 
 	private void checkWhoami() {
-		if (!isLogined()) {
-			System.out.println("로그인 상태가 아닙니다.");
-			return;
-		}
 		System.out.println("=========================");
 		System.out.printf("id : %s\n", loginedmember.mid);
 		System.out.printf("password : %s\n", loginedmember.mpwd);
@@ -141,17 +143,8 @@ public class MemberController extends Controller {
 	}
 
 	private void doLogout() {
-		if (!isLogined()) {
-			System.out.println("로그인 상태가 아닙니다.");
-			return;
-		}
 		System.out.printf("%s님 로그아웃 되었습니다.\n", loginedmember.mid);
 		loginedmember = null;
-	}
-
-	// 로그인 상태 확인
-	private boolean isLogined() {
-		return loginedmember != null;
 	}
 
 	// 아이디 체크
