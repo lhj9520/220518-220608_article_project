@@ -8,12 +8,13 @@ import com.KoreaIT.java.AM.Util.Util;
 import com.KoreaIT.java.AM.container.Container;
 import com.KoreaIT.java.AM.dto.Article;
 import com.KoreaIT.java.AM.dto.Member;
+import com.KoreaIT.java.AM.dao.Dao;
 
 public class ArticleController extends Controller {
 
 	private Scanner sc;
 	private List<Article> article;
-	int lastid = 0;
+	// int lastid = 0;
 	private String command;
 	private String actionMethodName;
 
@@ -52,16 +53,16 @@ public class ArticleController extends Controller {
 
 		System.out.println("테스트를 위한 article 데이터를 생성합니다.");
 
-		article.add(new Article(1, 1, "111", "111", Util.getNowDateTimeStr(), 1));
-		article.add(new Article(2, 1, "222", "222", Util.getNowDateTimeStr(), 2));
-		article.add(new Article(3, 1, "333", "333", Util.getNowDateTimeStr(), 3));
-		lastid = article.size();
+		Container.articleDao
+				.add(new Article(Container.articleDao.getNewId(), 1, "111", "111", Util.getNowDateTimeStr(), 1));
+		Container.articleDao
+				.add(new Article(Container.articleDao.getNewId(), 1, "222", "222", Util.getNowDateTimeStr(), 2));
+		Container.articleDao
+				.add(new Article(Container.articleDao.getNewId(), 1, "333", "333", Util.getNowDateTimeStr(), 3));
 	}
 
 	private void doWrite() {
-		// int id = article.size() + 1; //리스트 객체의 크기를 가져오면 됨 근데 이렇게 하면 delete -> write 시
-		// 게시글 index 꼬임 다시 lastid 변수 추가함
-		int id = lastid + 1;
+		int id = Container.articleDao.getNewId();
 		// 제목 입력 받기
 		System.out.printf("제목 : ");
 		String title = sc.nextLine();
@@ -71,8 +72,7 @@ public class ArticleController extends Controller {
 
 		// 게시판 객체 생성, id,제목,내용,날짜시간 넘겨주기
 		Article articlec = new Article(id, loginedmember.id, title, content, Util.getNowDateTimeStr());
-		article.add(articlec);
-		lastid = id;
+		Container.articleDao.add(articlec);
 
 		System.out.println(id + "번글이 생성되었습니다.");
 	}

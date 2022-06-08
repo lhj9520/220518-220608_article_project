@@ -45,14 +45,15 @@ public class MemberController extends Controller {
 	public void makeTestData() {
 
 		System.out.println("테스트를 위한 member 데이터를 생성합니다.");
-		member.add(new Member(1, Util.getNowDateTimeStr(), "admin", "admin", "관리자"));
-		member.add(new Member(2, Util.getNowDateTimeStr(), "1", "1", "1"));
-		member.add(new Member(3, Util.getNowDateTimeStr(), "2", "2", "2"));
-		member.add(new Member(4, Util.getNowDateTimeStr(), "3", "3", "3"));
+		Container.memberDao
+				.add(new Member(Container.memberDao.getNewId(), Util.getNowDateTimeStr(), "admin", "admin", "관리자"));
+		Container.memberDao.add(new Member(Container.memberDao.getNewId(), Util.getNowDateTimeStr(), "1", "1", "1"));
+		Container.memberDao.add(new Member(Container.memberDao.getNewId(), Util.getNowDateTimeStr(), "2", "2", "2"));
+		Container.memberDao.add(new Member(Container.memberDao.getNewId(), Util.getNowDateTimeStr(), "3", "3", "3"));
 	}
 
 	private void doJoin() {
-		int idx = member.size() + 1;
+		int id = Container.memberDao.getNewId();
 		String userid = null;
 
 		while (true) {
@@ -86,10 +87,10 @@ public class MemberController extends Controller {
 		System.out.printf("이름을 입력하세요 : ");
 		String name = sc.nextLine();
 
-		Member members = new Member(idx, Util.getNowDateTimeStr(), userid, userpwd, name);
-		member.add(members);
+		Member members = new Member(id, Util.getNowDateTimeStr(), userid, userpwd, name);
+		Container.memberDao.add(members);
 
-		System.out.println(idx + "번 회원가입이 완료되었습니다.");
+		System.out.println(id + "번 회원가입이 완료되었습니다.");
 	}
 
 	private void doLogin() {
