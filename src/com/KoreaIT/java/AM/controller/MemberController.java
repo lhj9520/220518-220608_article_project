@@ -59,11 +59,21 @@ public class MemberController extends Controller {
 		while (true) {
 			System.out.printf("아이디를 입력하세요 : ");
 			userid = sc.nextLine();
-
-			if (id_Duplicatecheck(userid)) { // 중복 없음
-				break;
+			// 엔터만 입력한 경우
+			if (userid.equals("")) {
+				continue;
 			}
-			System.out.printf("%s는(은) 중복된 ID입니다.\n", userid);
+			// 공백이 포함된 경우
+			if (userid.contains(" ")) {
+				System.out.println("공백을 포함 할 수 없습니다.");
+				continue;
+			}
+			// 중복 체크
+			if (!id_Duplicatecheck(userid)) {
+				System.out.printf("%s는(은) 중복된 ID입니다.\n", userid);
+				continue;
+			}
+			break;
 		}
 
 		String userpwd = null;
@@ -73,20 +83,42 @@ public class MemberController extends Controller {
 			// PWD 입력 받기
 			System.out.printf("비밀번호를 입력하세요 : ");
 			userpwd = sc.nextLine();
+			// 엔터만 입력한 경우
+			if (userpwd.equals("")) {
+				continue;
+			}
+
 			System.out.printf("비밀번호 확인: ");
 			userpwdconfirm = sc.nextLine();
-
+			// 엔터만 입력한 경우
+			if (userpwd.equals("")) {
+				continue;
+			}
+			// 비밀번호 확인
 			if (!userpwd.equals(userpwdconfirm)) {
 				System.out.println("비밀번호를 다시 입력하세요.");
 				continue;
 			}
 			break;
 		}
-
-		// 이름 입력 받기
-		System.out.printf("이름을 입력하세요 : ");
-		String name = sc.nextLine();
-
+		
+		String name = null;
+		while (true) {
+			// 이름 입력 받기
+			System.out.printf("이름을 입력하세요 : ");
+			name = sc.nextLine();
+			// 엔터만 입력한 경우
+			if (name.equals("")) {
+				continue;
+			}
+			// 공백이 포함된 경우
+			if (name.contains(" ")) {
+				System.out.println("공백을 포함 할 수 없습니다.");
+				continue;
+			}
+			break;
+		}
+		
 		Member members = new Member(id, Util.getNowDateTimeStr(), userid, userpwd, name);
 		Container.memberDao.add(members);
 
