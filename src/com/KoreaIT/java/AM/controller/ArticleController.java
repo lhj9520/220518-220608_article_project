@@ -1,14 +1,13 @@
 package com.KoreaIT.java.AM.controller;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
 import com.KoreaIT.java.AM.Util.Util;
+import com.KoreaIT.java.AM.container.Container;
 import com.KoreaIT.java.AM.dto.Article;
 import com.KoreaIT.java.AM.dto.Member;
-import com.KoreaIT.java.AM.controller.MemberController;
 
 public class ArticleController extends Controller {
 
@@ -19,7 +18,7 @@ public class ArticleController extends Controller {
 	private String actionMethodName;
 
 	public ArticleController(Scanner sc) {
-		article = new ArrayList<>();
+		article = Container.articleDao.articles;
 		this.sc = sc;
 	}
 
@@ -107,8 +106,8 @@ public class ArticleController extends Controller {
 
 		for (int i = forPrintArticles.size(); i > 0; i--) {
 			Article articlec = forPrintArticles.get(i - 1);
-			System.out.printf(" %2d  | %5s | %5d | %2d\n", articlec.id, articlec.title, articlec.memberid,
-					articlec.hit);
+			String writer = findArticleWriter(articlec.memberid);
+			System.out.printf(" %2d  | %5s | %4s | %2d\n", articlec.id, articlec.title, writer, articlec.hit);
 		}
 		System.out.println("=========================");
 	}
@@ -200,5 +199,16 @@ public class ArticleController extends Controller {
 			i++;
 		}
 		return -1;
+	}
+
+	private String findArticleWriter(int id) {
+		List<Member> members = Container.memberDao.members;
+
+		for (Member m : members) {
+			if (id == m.id) {
+				return m.mname;
+			}
+		}
+		return null;
 	}
 }

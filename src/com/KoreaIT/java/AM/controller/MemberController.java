@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.KoreaIT.java.AM.Util.Util;
+import com.KoreaIT.java.AM.container.Container;
 import com.KoreaIT.java.AM.dto.Member;
 
 public class MemberController extends Controller {
@@ -14,7 +15,7 @@ public class MemberController extends Controller {
 	private String actionMethodName;
 
 	public MemberController(Scanner sc) {
-		member = new ArrayList<>();
+		member = Container.memberDao.members;
 		this.sc = sc;
 	}
 
