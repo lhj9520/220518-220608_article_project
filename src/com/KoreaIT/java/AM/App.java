@@ -54,7 +54,40 @@ public class App {
 				System.out.println("존재하지 않는 명령어입니다.");
 				continue;
 			}
-
+			//로그인 상태 확인
+			String actionName = controllerName +"/"+actionMethodName;
+			
+			switch(actionName) {
+			case "article/write":
+			case "article/modify":
+			case "article/delete":
+			case "member/whoami":
+				if (!Controller.isLogined()) {
+					System.out.println("로그인 후 이용해주세요.");
+					continue;
+				}
+				break;
+			}
+			
+			switch(actionName) {
+			case "member/logout":
+				if (!Controller.isLogined()) {
+					System.out.println("로그인 상태가 아닙니다.");
+					continue;
+				}
+				break;
+			}
+			
+			switch(actionName) {
+			case "member/join":
+			case "member/login":
+				if (Controller.isLogined()) {
+					System.out.printf("%s님 로그인 상태입니다.\n", Controller.loginedmember.mid);
+					continue;
+				}
+				break;
+			}
+			
 			controller.doAction(command, actionMethodName);
 		}
 		sc.close();

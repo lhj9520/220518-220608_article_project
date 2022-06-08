@@ -1,11 +1,14 @@
 package com.KoreaIT.java.AM.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
 import com.KoreaIT.java.AM.Util.Util;
 import com.KoreaIT.java.AM.dto.Article;
+import com.KoreaIT.java.AM.dto.Member;
+import com.KoreaIT.java.AM.controller.MemberController;
 
 public class ArticleController extends Controller {
 
@@ -32,24 +35,12 @@ public class ArticleController extends Controller {
 			showDetail();
 			break;
 		case "write":
-			if (!isLogined()) {
-				System.out.println("로그인 상태가 아닙니다.");
-				break;
-			}
 			doWrite();
 			break;
 		case "modify":
-			if (!isLogined()) {
-				System.out.println("로그인 상태가 아닙니다.");
-				break;
-			}
 			doModify();
 			break;
 		case "delete":
-			if (!isLogined()) {
-				System.out.println("로그인 상태가 아닙니다.");
-				break;
-			}
 			doDelete();
 			break;
 		default:
@@ -116,7 +107,8 @@ public class ArticleController extends Controller {
 
 		for (int i = forPrintArticles.size(); i > 0; i--) {
 			Article articlec = forPrintArticles.get(i - 1);
-			System.out.printf(" %2d  | %5s | %5d | %2d\n", articlec.id, articlec.title, articlec.memberid, articlec.hit);
+			System.out.printf(" %2d  | %5s | %5d | %2d\n", articlec.id, articlec.title, articlec.memberid,
+					articlec.hit);
 		}
 		System.out.println("=========================");
 	}

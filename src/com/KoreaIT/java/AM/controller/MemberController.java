@@ -24,31 +24,15 @@ public class MemberController extends Controller {
 
 		switch (actionMethodName) {
 		case "join":
-			if (isLogined()) {
-				System.out.printf("%s님 로그인 상태입니다.\n", loginedmember.mid);
-				break;
-			}
 			doJoin();
 			break;
 		case "login":
-			if (isLogined()) {
-				System.out.printf("%s님 로그인 상태입니다.\n", loginedmember.mid);
-				break;
-			}
 			doLogin();
 			break;
 		case "whoami":
-			if (!isLogined()) {
-				System.out.println("로그인 상태가 아닙니다.");
-				break;
-			}
 			checkWhoami();
 			break;
 		case "logout":
-			if (!isLogined()) {
-				System.out.println("로그인 상태가 아닙니다.");
-				break;
-			}
 			doLogout();
 			break;
 		default:
@@ -61,9 +45,9 @@ public class MemberController extends Controller {
 
 		System.out.println("테스트를 위한 member 데이터를 생성합니다.");
 		member.add(new Member(1, Util.getNowDateTimeStr(), "admin", "admin", "관리자"));
-		member.add(new Member(1, Util.getNowDateTimeStr(), "1", "1", "1"));
-		member.add(new Member(2, Util.getNowDateTimeStr(), "2", "2", "2"));
-		member.add(new Member(3, Util.getNowDateTimeStr(), "3", "3", "3"));
+		member.add(new Member(2, Util.getNowDateTimeStr(), "1", "1", "1"));
+		member.add(new Member(3, Util.getNowDateTimeStr(), "2", "2", "2"));
+		member.add(new Member(4, Util.getNowDateTimeStr(), "3", "3", "3"));
 	}
 
 	private void doJoin() {
@@ -121,7 +105,7 @@ public class MemberController extends Controller {
 		membercheck = getMemberByLoginId(inputid);
 
 		if (membercheck == null) {
-			System.out.println("아이디가 존재하지 않습니다.\n");
+			System.out.println("아이디가 존재하지 않습니다.");
 			return;
 		}
 
